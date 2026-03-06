@@ -1,0 +1,45 @@
+version: '3.2'
+
+networks:
+  default:
+    external:
+      name: mingrogue
+
+services:
+  # backend:
+  #   image: node:20-alpine
+  #   working_dir: /backend-js
+  #   command: npm start
+  #   # env_file: ./auth-api/.env
+  #   volumes:
+  #     - type: bind
+  #       source: ./backend-js
+  #       target: /backend-js
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     - rabbitmq
+
+  service-worker:
+    image: node:20-alpine
+    working_dir: /service-worker-js
+    command: npm start
+    # env_file: ./auth-api/.env
+    volumes:
+      - type: bind
+        source: ./service-worker-js
+        target: /service-worker-js
+    depends_on:
+      - rabbitmq
+  rabbitmq:
+      image: 'bitnami/rabbitmq:3.8'
+      ports:
+        - '4369:4369'
+        - '5671:5672'
+        - '25672:25672'
+        - '15671:15672'
+      volumes:
+        - 'rabbitmq_data:/bitnami'
+volumes:
+  rabbitmq_data:
+    driver: local

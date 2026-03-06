@@ -1,0 +1,42 @@
+<div class="bg-stone-200 ml-20 mr-40 ">
+<ng-template #content>
+  <app-profile  *ngIf="renderProfile()" [name]="name" [email]="email" [picture]="picture"></app-profile>
+</ng-template>
+<div>
+  <ng-container #outlet [ngTemplateOutlet]="content">
+  </ng-container>
+</div>
+<h2 class="ml-20 text-3xl">Welcome to Arnab's gmail cleaner.</h2>
+
+  <p class="ml-20 mr-40 text-2xl">{{display}}</p>
+
+  <div class="flex flex-col gap-5 ml-20 mr-40 my-10">
+    <div class="flex items-start gap-4">
+      <textarea  [ngModel]="inputValue" contenteditable="true" class="emails-input rounded-md bg-teal-050 transition ease-in-out delay-150 bg-blue-100 hover:-translate-y-1 hover:scale-110 hover:bg-orange-100 duration-100 flex-1" [(ngModel)]="inputValue"></textarea>
+
+      <div *ngIf="inputValue.trim().length === 0" class="text-red-500 font-bold whitespace-nowrap pt-2">
+        ⚠️ Cannot send empty emails, you can copy all emails you have marked from the form below or add new emails
+      </div>
+    </div>
+    
+    <button [disabled]="inputValue.trim().length === 0" class="rounded-md bg-red-500 transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-orange-400 duration-100 w-fit disabled:opacity-50 disabled:cursor-not-allowed" (click)="deleteEmails()">Delete selected emails given by you</button>
+  </div>
+
+  
+  <ng-template #content1>
+    <p class="ml-20 mr-40 font-bold">Number of emails deleted {{totalDeleted.toString()}}</p>
+  </ng-template>
+  <div>
+    <ng-container #outlet1 [ngTemplateOutlet]="content">
+    </ng-container>
+  </div>
+
+  <ng-template #content2>
+    <div class="ml-20 mr-40 font-bold height:50px">See the emails you have added so far</div>
+    <textarea class="ml-20 mr-40 " style="height: 200px; width: 500px;" [(ngModel)]="selectedEmails"></textarea></ng-template>
+  <div>
+    <ng-container #outlet2 [ngTemplateOutlet]="content">
+    </ng-container>
+  </div>
+</div>
+
