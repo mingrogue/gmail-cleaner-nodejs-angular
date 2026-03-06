@@ -22,5 +22,5 @@
      *- go to root project directory and run docker-compose up.
 
 
-5. **** Note. after clicking "Delete selected emails given by you" button, please refresh the page ****
-5. The number of emails deleted will be shown in the screen at the bottom.
+ **** Note. after clicking "Delete selected emails given by you" button, please refresh the page ****
+ The number of emails deleted will be shown in the screen at the bottom.
