@@ -25,6 +25,8 @@ const axiosInstance = axios.create({
   baseURL: gmailBaseApiUrl,
 })
 
+console.log(rabbitMqUri);
+
 
 async function do_consume() {
     await wait(30000)
@@ -73,12 +75,13 @@ async function handleEmailDelete(emailPayload){
     axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${emailPayload.token}`
     let emailIds = []
     let first = true
+
     while(emailIds.length>59|| first){
-      console.log(count, pageToken);
       count++
       first = false
       emailIds.length = 0
       let emailFetch
+
       try{
         emailFetch = await axiosInstance.get(`gmail/v1/users/${emailPayload.userId}/messages`, {params: {maxResults: 60, pageToken}})
       }catch(err){
@@ -96,6 +99,7 @@ async function handleEmailDelete(emailPayload){
         let settledFlag = true
         const messageResp = getMessageById(messages, emailPayload.userId)
         resps = await Promise.allSettled(messageResp)
+        
         if(resps.map(res => {
           if(res.status != 'fulfilled') settledFlag = false
         }))

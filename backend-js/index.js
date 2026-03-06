@@ -73,14 +73,12 @@ app.get('/token', async (req, res) => {
   if(!req.query.code && !req.query.scope) res.status(404)
   else{
     const {tokens} = await oauth2Client.getToken(req.query.code)
-    console.log(tokens);
     oauth2Client.setCredentials(tokens);
     const decoded = jwtDecode.jwtDecode(tokens.id_token) 
     const email = decoded.email
     res.statusCode = 302;
 
     const fetchedUser = await User.findOne({email})
-    console.log(fetchedUser, 'fetcheduser');
     
     if(!fetchedUser) {
       await User.create({
@@ -105,22 +103,26 @@ app.get('/token', async (req, res) => {
 
 app.get('/profile', async(req, res )=>{
   const profile = await User.findOne({email: req.query.email})
+
   res.status(200).json(profile)
 })
 
 
 app.get('/logout', async (req, res) => {
   await oauth2Client.revokeToken(req.query.token)
+
   res.send('logged out')
 })
 
 app.get('/get-access-token', async (req,res) => {
   const email = this.req.email
   const user = await User.findOne({email: email})
+
   oauth2Client.setCredentials({
     refresh_token: user.refreshToken
   })
   const token = await oauth2Client.getAccessToken()
+
   res.send(token).status(200)
 })
 
@@ -134,33 +136,39 @@ app.get('/email/get-email-ids', middleware.validateToken, async(req,res)=>{
     let emailIds = await axiosInstance.get(`gmail/v1/users/${query.userId}/messages`, {
       params:{pageToken, maxResults:50}
     })   
+
     totalEmails.push(...await utils.fetchUniqueEmails(emailIds.data.messages, query.userId))
   }
+
   res.json(totalEmails.slice(0,totalIds)).status(200)
 })
 
 app.get('/email/total-deleted', middleware.validateToken, async (req,res) => {
   const user = await User.findOne({email: req.query.userId})
+
   res.status(200).json(user.totalDeleted)
 })
 
 app.post('/email/delete', middleware.validateToken, async (req,res) => {
   const user = await User.findOne({email: req.query.userId})
   let emailList = [...req.body.emails]
-  const usersEmailList = (await User.findOne({email: req.query.userId})).emailList
-  emailList.push(...emailList)
+  const usersEmailList = (await User.findOne({email: req.query.userId}))._doc.emailList
+
+  usersEmailList.push(...emailList)
   await User.findOneAndUpdate({email: req.query.userId}, {emailList: usersEmailList})
   rabbit.publishMessage('email-delete', {emails:usersEmailList, userId: user.userId, emailId: user.email, token:req.headers.authorization.split(' ')[1]})
+
   res.status(200).json('done')
 })
 
 app.get('/user/:email', middleware.validateToken, async (req,res)=> {
   const user = await User.findOne({email: req.params.email})
+
   res.status(200).json(user)
 })
 
 
-const httpsServer = https.createServer(credentials, app);
+// const httpsServer = https.createServer(credentials, app);
 const httpServer = http.createServer(app)
-httpsServer.listen(3001, ()=> console.log('server listening to port 3001'))
+// httpsServer.listen(3001, ()=> console.log('server listening to port 3001'))
 httpServer.listen(3000, ()=> console.log('server listening to port 3000'))
