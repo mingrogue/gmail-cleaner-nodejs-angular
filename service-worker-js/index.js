@@ -1,4 +1,3 @@
-const google = require("googleapis");
 const amqplib = require("amqplib");
 const User = require("./userModel");
 const axios = require("axios");
@@ -9,8 +8,6 @@ const {
   deleteBatch,
   sendEmail,
   wait,
-  setNewAccessToken,
-  makeRequest,
 } = require("./utlils");
 require("dotenv").config();
 
