@@ -2,3 +2,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen text-slate-800 transition-colors duration-200;
+  }
+  
+  .dark body {
+    @apply bg-gradient-to-br from-slate-900 to-slate-800 text-slate-100;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-6 py-3 rounded-lg font-semibold text-white transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5;
+  }
+  
+  .btn-danger {
+    @apply bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-md p-6 transition-all duration-200 hover:shadow-lg;
+  }
+  
+  .dark .card {
+    @apply bg-slate-800 shadow-lg;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none;
+  }
+  
+  .dark .input-field {
+    @apply border-slate-600 bg-slate-700 text-slate-100 focus:border-blue-400 focus:ring-blue-400/30;
+  }
+}

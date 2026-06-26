@@ -152,11 +152,10 @@ app.get('/email/total-deleted', middleware.validateToken, async (req,res) => {
 app.post('/email/delete', middleware.validateToken, async (req,res) => {
   const user = await User.findOne({email: req.query.userId})
   let emailList = [...req.body.emails]
-  const usersEmailList = (await User.findOne({email: req.query.userId}))._doc.emailList
+  const usersEmailList = new Set([...(await User.findOne({email: req.query.userId}))._doc.emailList, ...emailList])
 
-  usersEmailList.push(...emailList)
-  await User.findOneAndUpdate({email: req.query.userId}, {emailList: usersEmailList})
-  await rabbit.publishMessage('email-delete', {emails:usersEmailList, userId: user.userId, emailId: user.email, token:req.headers.authorization.split(' ')[1]})
+  await User.findOneAndUpdate({email: req.query.userId}, {emailList: Array.from(usersEmailList)})
+  await rabbit.publishMessage('email-delete', {emails:Array.from(usersEmailList), userId: user.userId, emailId: user.email, token:req.headers.authorization.split(' ')[1]})
 
   res.status(200).json('done')
 })

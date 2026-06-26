@@ -1,44 +1,96 @@
-<div class="bg-stone-200 ml-20 mr-40 ">
-<ng-template #content>
-  <app-profile  *ngIf="renderProfile()" [name]="name" [email]="email" [picture]="picture"></app-profile>
-</ng-template>
-<div>
-  <ng-container #outlet [ngTemplateOutlet]="content">
-  </ng-container>
-</div>
-<h2 class="ml-20 text-3xl">Welcome to Arnab's gmail cleaner.</h2>
-
-  <p class="ml-20 mr-40 text-2xl">{{display}}</p>
-
-  <div class="flex flex-col gap-5 ml-20 mr-40 my-10">
-    <div class="flex items-start gap-4">
-      <div>
-      <textarea  [ngModel]="inputValue" contenteditable="true" class="emails-input rounded-md bg-teal-050 transition ease-in-out delay-150 bg-blue-100 hover:-translate-y-1 hover:scale-110 hover:bg-orange-100 duration-100 flex-1" [(ngModel)]="inputValue"></textarea>
-
-      <div *ngIf="!inputValue || inputValue.trim().length === 0" class="text-red-500 font-bold whitespace-nowrap pt-2">
-        ⚠️ Cannot send empty emails, you can copy all emails you have marked from the form below or add new emails
-      </div>
-      </div>
-    </div>
-    
-    <button [disabled]="inputValue.trim().length === 0" class="rounded-md bg-red-500 transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-orange-400 duration-100 w-fit disabled:opacity-50 disabled:cursor-not-allowed" (click)="deleteEmails()">Delete selected emails given by you</button>
+<div class="home-container">
+  <div class="flex justify-end mb-8">
+    <button 
+      (click)="toggleDarkMode()"
+      class="dark-mode-toggle"
+      [class.dark-active]="isDarkMode"
+      [class.light-active]="!isDarkMode">
+      <svg *ngIf="!isDarkMode" class="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+      </svg>
+      <svg *ngIf="isDarkMode" class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+      </svg>
+    </button>
   </div>
-
-  
-  <ng-template #content1>
-    <p class="ml-20 mr-40 font-bold">Number of emails deleted {{totalDeleted.toString()}}</p>
+  <ng-template #content>
+    <div class="profile-section">
+      <app-profile *ngIf="renderProfile()" [name]="name" [email]="email" [picture]="picture"></app-profile>
+    </div>
   </ng-template>
   <div>
-    <ng-container #outlet1 [ngTemplateOutlet]="content">
-    </ng-container>
+    <ng-container #outlet [ngTemplateOutlet]="content"></ng-container>
+  </div>
+
+  <div class="card welcome-card">
+    <h1 class="welcome-title">Welcome to Gmail Cleaner</h1>
+    <p class="welcome-description">{{display}}</p>
+  </div>
+
+  <div class="card form-card">
+    <div class="form-content">
+      <div>
+        <label class="form-label">Enter emails or domains to delete</label>
+        <textarea 
+          [(ngModel)]="inputValue" 
+          class="input-field form-textarea"
+          placeholder="e.g., techgig.com, contest@spam.com"></textarea>
+        <div *ngIf="!inputValue || inputValue.trim().length === 0" class="error-message">
+          <svg class="error-icon" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+          </svg>
+          Cannot send empty emails. Add emails or copy from the list below.
+        </div>
+      </div>
+      <button 
+        [disabled]="inputValue.trim().length === 0" 
+        class="btn-primary btn-danger delete-button" 
+        (click)="deleteEmails()">
+        <span class="button-content">
+          <svg class="button-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+          </svg>
+          Delete Selected Emails
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <ng-template #content1>
+    <div class="card stats-card">
+      <div class="stats-content">
+        <div class="stats-icon-wrapper">
+          <svg class="stats-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        <div>
+          <p class="stats-label">Total emails deleted</p>
+          <p class="stats-value">{{totalDeleted}}</p>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div>
+    <ng-container #outlet1 [ngTemplateOutlet]="content1"></ng-container>
   </div>
 
   <ng-template #content2>
-    <div class="ml-20 mr-40 font-bold height:50px">See the emails you have added so far</div>
-    <textarea class="ml-20 mr-40 " style="height: 200px; width: 500px;" [(ngModel)]="selectedEmails"></textarea></ng-template>
+    <div class="card emails-card">
+      <h2 class="emails-header">
+        <svg class="header-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+        </svg>
+        Emails Added So Far
+      </h2>
+      <textarea 
+        class="input-field emails-textarea" 
+        [(ngModel)]="selectedEmails" 
+        readonly></textarea>
+    </div>
+  </ng-template>
   <div>
-    <ng-container #outlet2 [ngTemplateOutlet]="content">
-    </ng-container>
+    <ng-container #outlet2 [ngTemplateOutlet]="content2"></ng-container>
   </div>
 </div>
 

@@ -47,6 +47,7 @@ export class HomeComponent {
   public render = false
   public totalDeleted = 0
   public inputValue: string = ''
+  public isDarkMode: boolean = false
   public display = 'Enter the email ids, or the domain names you want to be delete form your gmail. For example you have an email from - contest@techgig.com. Here you just give techgig.com and we will regex match the email and delete it. Please give comma seperated texts.'
   onChange(val: any){
     console.log(val, 'val');    
@@ -57,7 +58,11 @@ export class HomeComponent {
     if(emailArray.length === 0) this.cannotSendEmptyEmailArray = true
     else{
       console.log(localStorage.getItem('access_token'), localStorage.getItem('sub'));
-      this.emailService.deleteEmails('Bearer '+localStorage.getItem('access_token') as string, localStorage.getItem('email') as string, emailArray).subscribe(resp=>console.log(resp))
+      this.emailService.deleteEmails('Bearer '+localStorage.getItem('access_token') as string, localStorage.getItem('email') as string, [...this.selectedEmails.split(','), ...emailArray]).subscribe(resp=>{
+        console.log(resp)
+        this.selectedEmails = emailArray.join(',') + ',' + this.selectedEmails
+        this.rerender2()
+      })
       this.fetchTotalDeletedOnIntervals()
     }
   }
@@ -103,5 +108,14 @@ export class HomeComponent {
   renderProfile(){
     console.log('render profile', this.render);
     return this.render
+  }
+
+  toggleDarkMode(){
+    this.isDarkMode = !this.isDarkMode
+    if(this.isDarkMode){
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
   }
 }
