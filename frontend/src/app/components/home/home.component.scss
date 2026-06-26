@@ -2,31 +2,39 @@
   max-width: 100rem;
   margin: 0 auto;
   padding: 4rem 2rem;
+  background: linear-gradient(135deg, rgba(119, 128, 143, 0.1) 0%, rgba(94, 95, 97, 0.1) 50%, rgba(106, 116, 131, 0.1) 100%);
+  border-radius: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.dark .home-container {
+  background: linear-gradient(135deg, rgba(71, 85, 105, 0.2) 0%, rgba(51, 65, 85, 0.2) 50%, rgba(30, 41, 59, 0.2) 100%);
 }
 
 .dark-mode-toggle {
   padding: 0.75rem;
   border-radius: 9999px;
-  background-color: white;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  transition: all 0.2s;
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  box-shadow: 0 4px 15px rgba(100, 116, 139, 0.4);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
 }
 
 .dark-mode-toggle:hover {
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  box-shadow: 0 8px 25px rgba(100, 116, 139, 0.6);
+  transform: scale(1.05);
 }
 
 .dark .dark-mode-toggle {
-  background-color: rgb(51 65 85);
+  background: linear-gradient(135deg, #94a3b8 0%, #cbd5e1 100%);
+  box-shadow: 0 4px 15px rgba(148, 163, 184, 0.4);
 }
 
-.dark-mode-toggle.dark-active {
-  background-color: rgb(51 65 85);
+.dark .dark-mode-toggle:hover {
+  box-shadow: 0 8px 25px rgba(148, 163, 184, 0.6);
 }
 
-.dark-mode-toggle.light-active {
-  background-color: white;
-}
 
 .profile-section {
   margin-bottom: 4rem;
@@ -34,27 +42,49 @@
 
 .welcome-card {
   margin-bottom: 4rem;
+  text-align: center !important;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: none;
 }
 
 .welcome-title {
   font-size: 2.25rem;
   font-weight: 700;
-  color: rgb(30 41 59);
+  background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 1rem;
+  text-align: center !important;
+  width: 100%;
 }
 
 .dark .welcome-title {
-  color: rgb(241 245 249);
+  background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .welcome-description {
   color: rgb(71 85 105);
   font-size: 1.25rem;
   line-height: 1.625;
+  background: linear-gradient(90deg, #475569 0%, #64748b 50%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center !important;
+  width: 100%;
 }
 
 .dark .welcome-description {
   color: rgb(203 213 225);
+  background: linear-gradient(90deg, #cbd5e1 0%, #94a3b8 50%, #64748b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .form-card {
@@ -73,10 +103,18 @@
   font-weight: 600;
   color: rgb(51 65 85);
   margin-bottom: 0.75rem;
+  background: linear-gradient(90deg, #334155, #475569);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .dark .form-label {
   color: rgb(203 213 225);
+  background: linear-gradient(90deg, #e2e8f0, #cbd5e1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .form-textarea {
@@ -136,15 +174,21 @@
 }
 
 .stats-icon-wrapper {
-  background-color: rgb(220 252 231);
+  background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
   padding: 1rem;
   border-radius: 9999px;
+  box-shadow: 0 4px 15px rgba(100, 116, 139, 0.4);
+}
+
+.dark .stats-icon-wrapper {
+  background: linear-gradient(135deg, #475569 0%, #64748b 100%);
+  box-shadow: 0 4px 15px rgba(71, 85, 105, 0.4);
 }
 
 .stats-icon {
   width: 1.75rem;
   height: 1.75rem;
-  color: rgb(22 163 74);
+  color: white;
 }
 
 .stats-label {
@@ -159,11 +203,17 @@
 .stats-value {
   font-size: 1.875rem;
   font-weight: 700;
-  color: rgb(30 41 59);
+  background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .dark .stats-value {
-  color: rgb(241 245 249);
+  background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 
@@ -175,16 +225,29 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  background: linear-gradient(90deg, #334155, #475569, #64748b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .dark .emails-header {
-  color: rgb(241 245 249);
+  background: linear-gradient(90deg, #e2e8f0, #cbd5e1, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .header-icon {
   width: 1.75rem;
   height: 1.75rem;
-  color: rgb(37 99 235);
+  color: #475569;
+  filter: drop-shadow(0 2px 4px rgba(71, 85, 105, 0.3));
+}
+
+.dark .header-icon {
+  color: #cbd5e1;
+  filter: drop-shadow(0 2px 4px rgba(203, 213, 225, 0.3));
 }
 
 .emails-textarea {
