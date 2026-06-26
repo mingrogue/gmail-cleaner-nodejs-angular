@@ -15,8 +15,8 @@ const https = require('https');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const privateKey  = fs.readFileSync('./assets/key.pem', 'utf8');
-const certificate = fs.readFileSync('./assets/cert.pem', 'utf8');
+// const privateKey  = fs.readFileSync('./assets/key.pem', 'utf8');
+// const certificate = fs.readFileSync('./assets/cert.pem', 'utf8');
 const frontEndUrl = process.env.FRONT_END_URL;
 const gmailBaseApiUrl = process.env.GMAIL_BASRE_API_URL;
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
@@ -24,7 +24,7 @@ const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
 const redirectUrl = process.env.REDIRECT_URL;
 const mongoUri = process.env.MONGO_URI
 
-const credentials = {key: privateKey, cert: certificate};
+// const credentials = {key: privateKey, cert: certificate};
 const axiosInstance = axios.create({
   baseURL:gmailBaseApiUrl,
 })
@@ -156,7 +156,7 @@ app.post('/email/delete', middleware.validateToken, async (req,res) => {
 
   usersEmailList.push(...emailList)
   await User.findOneAndUpdate({email: req.query.userId}, {emailList: usersEmailList})
-  rabbit.publishMessage('email-delete', {emails:usersEmailList, userId: user.userId, emailId: user.email, token:req.headers.authorization.split(' ')[1]})
+  await rabbit.publishMessage('email-delete', {emails:usersEmailList, userId: user.userId, emailId: user.email, token:req.headers.authorization.split(' ')[1]})
 
   res.status(200).json('done')
 })

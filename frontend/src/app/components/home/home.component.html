@@ -12,10 +12,12 @@
 
   <div class="flex flex-col gap-5 ml-20 mr-40 my-10">
     <div class="flex items-start gap-4">
+      <div>
       <textarea  [ngModel]="inputValue" contenteditable="true" class="emails-input rounded-md bg-teal-050 transition ease-in-out delay-150 bg-blue-100 hover:-translate-y-1 hover:scale-110 hover:bg-orange-100 duration-100 flex-1" [(ngModel)]="inputValue"></textarea>
 
-      <div *ngIf="inputValue.trim().length === 0" class="text-red-500 font-bold whitespace-nowrap pt-2">
+      <div *ngIf="!inputValue || inputValue.trim().length === 0" class="text-red-500 font-bold whitespace-nowrap pt-2">
         ⚠️ Cannot send empty emails, you can copy all emails you have marked from the form below or add new emails
+      </div>
       </div>
     </div>
     

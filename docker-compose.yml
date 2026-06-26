@@ -20,26 +20,35 @@ services:
   #   depends_on:
   #     - rabbitmq
 
-  service-worker:
-    image: node:20-alpine
-    working_dir: /service-worker-js
-    command: npm start
-    # env_file: ./auth-api/.env
-    volumes:
-      - type: bind
-        source: ./service-worker-js
-        target: /service-worker-js
-    depends_on:
-      - rabbitmq
+  # service-worker:
+  #   image: node:20-alpine
+  #   working_dir: /service-worker-js
+  #   command: npm start
+  #   # env_file: ./auth-api/.env
+  #   volumes:
+  #     - type: bind
+  #       source: ./service-worker-js
+  #       target: /service-worker-js
+  #   depends_on:
+  #     - rabbitmq
   rabbitmq:
-      image: 'bitnami/rabbitmq:3.8'
-      ports:
-        - '4369:4369'
-        - '5671:5672'
-        - '25672:25672'
-        - '15671:15672'
-      volumes:
-        - 'rabbitmq_data:/bitnami'
+    image: rabbitmq:4-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: securepassword123
+    # volumes:
+    #   - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
 volumes:
   rabbitmq_data:
     driver: local
