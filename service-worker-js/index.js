@@ -8,6 +8,7 @@ const {
   deleteBatch,
   sendEmail,
   wait,
+  processEmailDeletePayload,
 } = require("./utlils");
 require("dotenv").config();
 
@@ -24,7 +25,7 @@ const axiosInstance = axios.create({
 console.log(rabbitMqUri);
 
 async function do_consume() {
-  await wait(30000);
+  await wait(3000);
   var conn = await amqplib.connect(rabbitMqUri, "heartbeat=60");
   var ch = await conn.createChannel();
   var q = "email-delete";
@@ -49,7 +50,6 @@ async function processMessage(msg) {
   await handleEmailDelete(JSON.parse(msg.content));
 }
 
-
 async function handleEmailDelete(emailPayload) {
   console.log(emailPayload);
   const deleteDocsFlag = emailPayload.deleteDocs || false;
@@ -71,7 +71,10 @@ async function handleEmailDelete(emailPayload) {
       first = false;
       emailIds.length = 0;
       // let emailFetch = await getMails(axiosInstance, emailPayload.userId, pageToken)
-      let emailFetch = await axiosInstance.get(`gmail/v1/users/${emailPayload.userId}/messages`, { params: { maxResults: 60, pageToken } });
+      let emailFetch = await axiosInstance.get(
+        `gmail/v1/users/${emailPayload.userId}/messages`,
+        { params: { maxResults: 60, pageToken } },
+      );
 
       pageToken = emailFetch.data.nextPageToken;
       emailIds.push(...emailFetch.data.messages.map((message) => message.id));
@@ -81,34 +84,22 @@ async function handleEmailDelete(emailPayload) {
         const gatherResponses = [];
         const emailsIdsToDelete = [];
         // let settledFlag = true;
-        const messageResp = getMessageById(messages, emailPayload.userId, axiosInstance);
+        const messageResp = getMessageById(
+          messages,
+          emailPayload.userId,
+          axiosInstance,
+        );
         gatherResponses.push(...(await Promise.allSettled(messageResp)));
 
-        // if (
-        //   resps.map((res) => {
-        //     if (res.status != "fulfilled") settledFlag = false;
-        //   })
-        // )
-        //   if (!settledFlag) {
-        //     await wait(10000);
-        //     await setNewAccessToken(emailPayload.userId, axiosInstance);
-        //     resps = await Promise.allSettled(
-        //       getMessageById(messages, emailPayload.userId),
-        //     );
-        //   }
-        // gatherResponses.push(...resps);
         await wait(1000);
         console.log("waiting");
 
         if (emailList.length > 1) {
-          gatherResponses.map((response) => {
-            const receiverEmailId = response.value.data.payload.headers
-              .filter((header) => header.name == "From")[0]
-              ["value"].toLowerCase();
-            emailList.map((email) =>
-              receiverEmailId.includes(email)
-                ? emailsIdsToDelete.push(response.value.data.id)
-                : null,
+          gatherResponses.map((emailResponse) => {
+            processEmailDeletePayload(
+              emailResponse,
+              emailList,
+              emailsIdsToDelete,
             );
           });
           console.log(
@@ -117,7 +108,11 @@ async function handleEmailDelete(emailPayload) {
             pageToken,
           );
           if (emailsIdsToDelete.length != 0) {
-            await deleteBatch(emailsIdsToDelete, emailPayload.userId, axiosInstance);
+            await deleteBatch(
+              emailsIdsToDelete,
+              emailPayload.userId,
+              axiosInstance,
+            );
             user = await User.findOne({ userId: emailPayload.userId });
             await User.findByIdAndUpdate(user._id, {
               totalDeleted: user.totalDeleted + emailsIdsToDelete.length,
@@ -135,4 +130,3 @@ async function handleEmailDelete(emailPayload) {
     console.log(err);
   }
 }
-
